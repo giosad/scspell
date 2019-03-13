@@ -24,17 +24,12 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import argparse
+import configparser
 import os
 import re
 import sys
 import shutil
 import uuid
-
-try:
-    import ConfigParser
-except ImportError:
-    # Python 3
-    import configparser as ConfigParser
 
 from . import _portable
 from ._corpus import CorporaFile
@@ -635,10 +630,10 @@ def locate_dictionary():
     except IOError:
         return DICT_DEFAULT_LOC
 
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     try:
         config.readfp(f)
-    except ConfigParser.ParsingError as e:
+    except configparser.ParsingError as e:
         print(str(e))
         sys.exit(1)
     finally:
@@ -652,7 +647,7 @@ def locate_dictionary():
             print('Error while parsing "%s": dictionary must be an absolute '
                   'path.' % SCSPELL_CONF)
             sys.exit(1)
-    except ConfigParser.Error:
+    except configparser.Error:
         return DICT_DEFAULT_LOC
 
 
@@ -668,16 +663,16 @@ def set_dictionary(filename):
                 filename)))
 
     verify_user_data_dir()
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     try:
         config.read(SCSPELL_CONF)
-    except ConfigParser.ParsingError as e:
+    except configparser.ParsingError as e:
         print(str(e))
         sys.exit(1)
 
     try:
         config.add_section(CONFIG_SECTION)
-    except ConfigParser.DuplicateSectionError:
+    except configparser.DuplicateSectionError:
         pass
     config.set(CONFIG_SECTION, 'dictionary', filename)
 
